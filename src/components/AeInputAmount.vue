@@ -1,5 +1,8 @@
 <template>
-  <div class="input-group">
+  <div
+    class="input-group"
+    :class="{ disabled }"
+  >
     <input
       :value="value"
       v-bind="$attrs"
@@ -25,7 +28,7 @@
       />
     </div>
     <div
-      v-if="selectedToken === 'native'"
+      v-if="selectedToken === 'native' && !symbol"
       class="input-group-append"
     >
       <span
@@ -46,6 +49,15 @@
         />
       </span>
     </div>
+
+    <div
+      v-if="symbol"
+      class="input-group-append"
+    >
+      <span class="input-group-text append__ae text-ellipsis">
+        <span class="ae">{{ symbol }}</span>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -62,7 +74,8 @@ export default {
     min: { type: Number, default: 0 },
     step: { type: Number, default: 0.01 },
     value: { type: [Number, String], required: true },
-    selectTokenF: { type: Function, required: true },
+    selectTokenF: { type: Function, default: (t) => t },
+    symbol: { type: String, default: null },
     disabled: { type: Boolean },
     notTokenTipable: { type: Boolean },
   },
@@ -104,6 +117,10 @@ export default {
     span {
       vertical-align: sub;
     }
+  }
+
+  &.disabled {
+    opacity: 0.44;
   }
 
   &:focus-within {

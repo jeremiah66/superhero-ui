@@ -32,8 +32,8 @@
       </div>
 
       <template v-if="hasContractV2Address">
-        <AeAmount
-          v-for="tokenBalance in tokenBalances"
+        <AeAmountFiat
+          v-for="tokenBalance in tokenBalances.filter(t => t.balance !== '0')"
           :key="tokenBalance.token"
           class="not-bootstrap-row"
           :amount="tokenBalance.balance"
@@ -57,10 +57,15 @@ import AeAmount from '../AeAmount.vue';
 import Dropdown from '../Dropdown.vue';
 import RightSectionTitle from './RightSectionTitle.vue';
 import OutlinedButton from '../OutlinedButton.vue';
+import AeAmountFiat from '../AeAmountFiat.vue';
 
 export default {
   components: {
-    RightSectionTitle, AeAmount, Dropdown, OutlinedButton,
+    AeAmountFiat,
+    RightSectionTitle,
+    AeAmount,
+    Dropdown,
+    OutlinedButton,
   },
   props: { closed: Boolean },
   data: () => ({

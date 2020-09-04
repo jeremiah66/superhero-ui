@@ -26,6 +26,7 @@ export default new Vuex.Store({
     graylistedUrls: [],
     tokenInfo: {},
     tokenBalances: [],
+    tokenPrices: {},
     isHiddenContent: true,
     useSdkWallet: false,
     useIframeWallet: false,
