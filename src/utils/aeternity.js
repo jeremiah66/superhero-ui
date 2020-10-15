@@ -114,7 +114,7 @@ export const createOrChangeAllowance = async (tokenAddress, amount, forAccount =
 
   return tokenContract
     .methods[decodedResult !== undefined ? 'change_allowance' : 'create_allowance'](
-    forAccount || process.env.VUE_APP_CONTRACT_V2_ADDRESS.replace('ct_', 'ak_'),
+      forAccount || process.env.VUE_APP_CONTRACT_V2_ADDRESS.replace('ct_', 'ak_'),
       allowanceAmount,
     );
 };
