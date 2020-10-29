@@ -31,6 +31,7 @@
         <TipTitle :tip-title="tip.title" />
       </div>
       <TipPreview
+        v-if="tipUrl"
         :tip="tip"
         :go-to-tip="goToTip"
         :tip-url="tipUrl"
@@ -84,7 +85,7 @@ export default {
       return { name: 'tip', params: { tipId: this.tip.id } };
     },
     tipUrl() {
-      return this.tip.url.startsWith('http://') || this.tip.url.startsWith('https://') ? this.tip.url : `http://${this.tip.url}`;
+      return this.tip.url && (this.tip.url.startsWith('http://') || this.tip.url.startsWith('https://') ? this.tip.url : `http://${this.tip.url}`);
     },
   },
   methods: {
