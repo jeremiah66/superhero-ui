@@ -2,6 +2,35 @@
   <div class="tips-list">
     <div class="actions">
       <SendTip />
+      <div class="feed-category-row">
+        <FilterButton
+          :class="{ active: feed === 'main' }"
+          @click="feed = 'main'"
+        >
+          <IconFeed />
+          <span class="vertical-align-mid">
+            {{ $t('Main') }}
+          </span>
+        </FilterButton>
+        <FilterButton
+          :class="{ active: feed === 'tips' }"
+          @click="feed = 'tips'"
+        >
+          <IconDiamond />
+          <span class="vertical-align-mid">
+            {{ $t('Tips') }}
+          </span>
+        </FilterButton>
+        <FilterButton
+          :class="{ active: feed === 'posts' }"
+          @click="feed = 'posts'"
+        >
+          <IconPosts />
+          <span class="vertical-align-mid">
+            {{ $t('Posts') }}
+          </span>
+        </FilterButton>
+      </div>
       <div class="not-bootstrap-row">
         <ButtonPlain
           :class="{ active: tipSortBy === 'hot' }"
@@ -49,6 +78,10 @@ import TipsPagination from '../components/TipsPagination.vue';
 import ThreeDotsMenu from '../components/ThreeDotsMenu.vue';
 import Checkbox from '../components/Checkbox.vue';
 import ButtonPlain from '../components/ButtonPlain.vue';
+import FilterButton from '../components/FilterButton.vue';
+import IconFeed from '../assets/iconFeed.svg?icon-component';
+import IconDiamond from '../assets/iconDiamond.svg?icon-component';
+import IconPosts from '../assets/iconPosts.svg?icon-component';
 
 export default {
   components: {
@@ -57,10 +90,15 @@ export default {
     Checkbox,
     ThreeDotsMenu,
     ButtonPlain,
+    FilterButton,
+    IconFeed,
+    IconDiamond,
+    IconPosts,
   },
   props: {
     query: { type: String, default: '' },
   },
+  data: () => ({ feed: 'main' }),
   computed: mapState(['tipSortBy', 'isHiddenContent']),
   methods: mapMutations(['setTipSortBy', 'setIsHiddenContent']),
 };
@@ -84,6 +122,17 @@ export default {
 
     @include smallest {
       display: none;
+    }
+  }
+
+  .feed-category-row {
+    background-color: $light-color;
+    padding: 0.5rem 1rem;
+
+    .filter-button {
+      svg {
+        height: 0.8rem;
+      }
     }
   }
 
