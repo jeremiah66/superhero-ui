@@ -9,7 +9,42 @@
           @click="toggleForm"
         >
       </div>
-      <form @submit.prevent="sendTip">
+      <form
+        v-if="feed === 'posts'"
+        @submit.prevent
+      >
+        <MessageInput
+          v-model="sendPostForm.title"
+          maxlength="280"
+          :placeholder="$t('What are your thougts?')"
+        />
+        <div class="mt-2 d-flex flex-row">
+          <div class="post-actions">
+            <ButtonPlain><IconPictures /></ButtonPlain>
+            <ButtonPlain><IconGif /></ButtonPlain>
+            <ButtonPlain><IconEmoji /></ButtonPlain>
+            <ButtonPlain><IconPoll /></ButtonPlain>
+            <ButtonPlain><IconThreeDots /></ButtonPlain>
+          </div>
+          <div class="separator" />
+          <div class="text-right">
+            <ButtonPlain
+              class="btn btn-primary post-submit"
+              type="submit"
+              :disabled="!sendPostForm.title.length"
+              @click="sendPost"
+            >
+              <span class="text-nowrap">
+                <IconPosts /> {{ $t('Post') }}
+              </span>
+            </ButtonPlain>
+          </div>
+        </div>
+      </form>
+      <form
+        v-else
+        @submit.prevent="sendTip"
+      >
         <MessageInput
           v-model="sendTipForm.title"
           maxlength="280"
@@ -67,6 +102,13 @@ import AeButton from '../../AeButton.vue';
 import IconDiamond from '../../../assets/iconDiamond.svg?icon-component';
 import MessageInput from '../../MessageInput.vue';
 import UrlStatus from './UrlStatus.vue';
+import ButtonPlain from '../../ButtonPlain.vue';
+import IconPictures from '../../../assets/iconPictures.svg?icon-component';
+import IconGif from '../../../assets/iconGif.svg?icon-component';
+import IconEmoji from '../../../assets/iconEmoji.svg?icon-component';
+import IconPoll from '../../../assets/iconPoll.svg?icon-component';
+import IconThreeDots from '../../../assets/iconThreeDots.svg?icon-component';
+import IconPosts from '../../../assets/iconPosts.svg?icon-component';
 
 export default {
   components: {
@@ -75,13 +117,24 @@ export default {
     MessageInput,
     UrlStatus,
     IconDiamond,
+    ButtonPlain,
+    IconPictures,
+    IconGif,
+    IconEmoji,
+    IconPoll,
+    IconThreeDots,
+    IconPosts,
   },
+  props: { feed: { type: String, required: true } },
   data() {
     return {
       inputToken: 'native',
       sendTipForm: {
         amount: 0,
         url: '',
+        title: '',
+      },
+      sendPostForm: {
         title: '',
       },
       sendingTip: false,
@@ -138,50 +191,35 @@ export default {
     toggleForm() {
       this.showForm = !this.showForm;
       this.clearTipForm();
+      this.clearPostForm();
     },
     openTipDeeplink() {
       window.location = createDeepLinkUrl({ type: 'tip' });
+    },
+    sendPost() {
+      console.log(this.sendPostForm);
+      this.clearPostForm();
+    },
+    clearPostForm() {
+      this.sendPostForm = { title: '' };
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .tip__post {
-    background-color: $actions_ribbon_background_color;
-    max-height: 400px;
+.tip__post {
+  background-color: $actions_ribbon_background_color;
+  max-height: 400px;
 
-    form {
-      padding: 0.6rem 1rem 0 1rem;
-    }
+  form {
+    padding: 0.6rem 1rem 0 1rem;
+  }
 
-    .form-row {
-      margin-top: 1rem;
+  .form-row {
+    margin-top: 1rem;
 
-      .form-group {
-        border: 0.05rem solid $buttons_background;
-        border-radius: 0.25rem;
-        padding: 0;
-
-        input,
-        input:focus {
-          border: 0;
-        }
-
-        &:focus-within {
-          border-color: $secondary_color;
-        }
-      }
-
-      .col-md-4 {
-        padding-right: 0;
-      }
-    }
-
-    .send-url {
-      position: relative;
-      background-color: $buttons_background;
-      color: $standard_font_color;
+    .form-group {
       border: 0.05rem solid $buttons_background;
       border-radius: 0.25rem;
       padding: 0;
@@ -194,117 +232,174 @@ export default {
       &:focus-within {
         border-color: $secondary_color;
       }
-
-      input {
-        background-color: $buttons_background;
-        color: $standard_font_color;
-        font-size: 0.75rem;
-      }
     }
 
-    .form-group {
-      margin-bottom: 0;
-
-      input {
-        &.comment {
-          display: inline-block;
-          width: calc(100% - 3.01rem);
-        }
-
-        background-color: $buttons_background;
-        color: $standard_font_color;
-        font-size: 0.75rem;
-        height: 2.2rem;
-      }
-    }
-
-    .send-url,
-    .send-amount {
-      margin-bottom: 1rem;
-    }
-
-    .tip__post__balance span {
-      font-size: 0.75rem;
-      color: $standard_font_color;
-    }
-
-    .tip__post__label {
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: $standard_font_color;
-      padding: 0.375rem 0.5rem;
-      background-color: $light_color;
-
-      label {
-        margin-bottom: 0;
-      }
-    }
-
-    .url-status {
-      position: absolute;
-      left: 0.55rem;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .url-input {
-      padding-left: 2.1rem;
-
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    .closed-view.message-input {
-      padding: 1rem;
-
-      textarea::placeholder {
-        color: $standard_font_color;
-      }
-    }
-
-    .close-sendform {
-      width: 0.65rem;
-      float: right;
-
-      &:hover {
-        cursor: pointer;
-        opacity: 0.6;
-      }
-    }
-
-    .ae-button {
-      width: 100%;
-      height: 2.2rem;
-      margin-top: 0.05rem;
-      margin-bottom: 1rem;
-
-      svg {
-        height: 1.1em;
-      }
-    }
-
-    .message-box {
-      position: relative;
-    }
-
-    @media (min-width: 576px) {
-      .send-url,
-      .send-amount,
-      .col-md-2 {
-        padding: 0;
-      }
-    }
-
-    @media (min-width: 768px) {
-      .send-url,
-      .send-amount {
-        padding: 0 0.25rem;
-      }
-
-      .col-md-2 {
-        padding: 0;
-      }
+    .col-md-4 {
+      padding-right: 0;
     }
   }
+
+  .post-actions {
+    padding-bottom: 0.6rem;
+
+    svg {
+      height: 2rem;
+      width: auto;
+    }
+  }
+
+  .post-submit {
+    min-width: 4.5rem;
+    color: $standard_font_color;
+    background-color: $secondary_color;
+    border: none;
+
+    .loading {
+      transform: scale(0.6);
+      margin-top: -0.7rem;
+    }
+
+    &[disabled] {
+      opacity: 0.4;
+    }
+
+    span {
+      vertical-align: inherit;
+    }
+  }
+
+  .send-url {
+    position: relative;
+    background-color: $buttons_background;
+    color: $standard_font_color;
+    border: 0.05rem solid $buttons_background;
+    border-radius: 0.25rem;
+    padding: 0;
+
+    input,
+    input:focus {
+      border: 0;
+    }
+
+    &:focus-within {
+      border-color: $secondary_color;
+    }
+
+    input {
+      background-color: $buttons_background;
+      color: $standard_font_color;
+      font-size: 0.75rem;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 0;
+
+    input {
+      &.comment {
+        display: inline-block;
+        width: calc(100% - 3.01rem);
+      }
+
+      background-color: $buttons_background;
+      color: $standard_font_color;
+      font-size: 0.75rem;
+      height: 2.2rem;
+    }
+  }
+
+  .send-url,
+  .send-amount {
+    margin-bottom: 1rem;
+  }
+
+  .tip__post__balance span {
+    font-size: 0.75rem;
+    color: $standard_font_color;
+  }
+
+  .tip__post__label {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: $standard_font_color;
+    padding: 0.375rem 0.5rem;
+    background-color: $light_color;
+
+    label {
+      margin-bottom: 0;
+    }
+  }
+
+  .url-status {
+    position: absolute;
+    left: 0.55rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .url-input {
+    padding-left: 2.1rem;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .closed-view.message-input {
+    padding: 1rem;
+
+    textarea::placeholder {
+      color: $standard_font_color;
+    }
+  }
+
+  .close-sendform {
+    width: 0.65rem;
+    float: right;
+
+    &:hover {
+      cursor: pointer;
+      opacity: 0.6;
+    }
+  }
+
+  .ae-button,
+  .post-submit {
+    width: 100%;
+    height: 2.2rem;
+    margin-top: 0.05rem;
+    margin-bottom: 1rem;
+
+    svg {
+      height: 1.1em;
+    }
+  }
+
+  .message-box {
+    position: relative;
+  }
+
+  @media (min-width: 576px) {
+    .send-url,
+    .send-amount,
+    .col-md-2 {
+      padding: 0;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .send-url,
+    .send-amount {
+      padding: 0 0.25rem;
+    }
+
+    .col-md-2 {
+      padding: 0;
+    }
+  }
+}
+
+.separator {
+  flex-grow: 1;
+}
 </style>

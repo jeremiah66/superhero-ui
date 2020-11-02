@@ -1,7 +1,7 @@
 <template>
   <div class="tips-list">
     <div class="actions">
-      <SendTip />
+      <SendTip :feed="feed" />
       <div class="feed-category-row">
         <FilterButton
           :class="{ active: feed === 'main' }"
@@ -63,10 +63,12 @@
       </div>
     </div>
 
-    <TipsPagination
+    <FeedPagination
       :tip-sort-by="tipSortBy"
       :search="query"
       :blacklist="isHiddenContent"
+      :feed-tips="feedTips"
+      :feed-posts="feedPosts"
     />
   </div>
 </template>
@@ -74,7 +76,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import SendTip from '../components/layout/sendTip/SendTip.vue';
-import TipsPagination from '../components/TipsPagination.vue';
+import FeedPagination from '../components/FeedPagination.vue';
 import ThreeDotsMenu from '../components/ThreeDotsMenu.vue';
 import Checkbox from '../components/Checkbox.vue';
 import ButtonPlain from '../components/ButtonPlain.vue';
@@ -85,7 +87,7 @@ import IconPosts from '../assets/iconPosts.svg?icon-component';
 
 export default {
   components: {
-    TipsPagination,
+    FeedPagination,
     SendTip,
     Checkbox,
     ThreeDotsMenu,
@@ -99,7 +101,11 @@ export default {
     query: { type: String, default: '' },
   },
   data: () => ({ feed: 'main' }),
-  computed: mapState(['tipSortBy', 'isHiddenContent']),
+  computed: {
+    ...mapState(['tipSortBy', 'isHiddenContent']),
+    feedTips() { return this.feed === 'main' || this.feed === 'tips'; },
+    feedPosts() { return this.feed === 'main' || this.feed === 'posts'; },
+  },
   methods: mapMutations(['setTipSortBy', 'setIsHiddenContent']),
 };
 </script>

@@ -42,9 +42,11 @@
         v-if="activeTab === 'tips' && activity === 'activity'"
         class="tips__container"
       >
-        <TipsPagination
+        <FeedPagination
           tip-sort-by="latest"
           :address="address"
+          feed-tips="true"
+          feed-posts="true"
         />
       </div>
       <div
@@ -94,7 +96,7 @@ import { mapState } from 'vuex';
 import Backend from '../utils/backend';
 import { EventBus } from '../utils/eventBus';
 import Loading from './Loading.vue';
-import TipsPagination from './TipsPagination.vue';
+import FeedPagination from './FeedPagination.vue';
 import TipComment from './tipRecords/TipComment.vue';
 import TipRecord from './tipRecords/TipRecord.vue';
 import IconChannel from '../assets/iconChannel.svg?icon-component';
@@ -103,7 +105,7 @@ import FilterButton from './FilterButton.vue';
 
 export default {
   components: {
-    TipsPagination,
+    FeedPagination,
     Loading,
     TipComment,
     TipRecord,

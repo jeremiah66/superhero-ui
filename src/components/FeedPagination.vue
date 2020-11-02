@@ -41,10 +41,12 @@ export default {
     address: { type: String, default: null },
     search: { type: String, default: null },
     blacklist: Boolean,
+    feedTips: Boolean,
+    feedPosts: Boolean,
   },
   computed: {
     args() {
-      return [this.tipSortBy, this.address, this.search, this.blacklist];
+      return [this.tipSortBy, this.address, this.search, this.blacklist, this.feedTips, this.feedPosts];
     },
     ...mapState(
       'backend',
