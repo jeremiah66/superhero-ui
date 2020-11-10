@@ -33,19 +33,35 @@
         :tip="tip"
         :go-to-tip="goToTip"
         :tip-url="tipUrl"
-      />
-      <div class="tip__footer">
-        <div class="tip__footer_wrapper">
-          <div
-            class="tip__comments"
-            :class="[{ 'tip__comments--hascomments': tip.commentCount }]"
+      >
+        <TipInput :tip="tip" />
+      </TipPreview>
+      <div
+        class="tip-footer"
+        @click.stop
+      >
+        <!-- <TipInput :tip="tip" /> -->
+        <div class="actions-wrapper">
+          <ButtonPlain
+            class="actions"
+            :class="{ active: isTipPinned }"
+            @click="pinOrUnPinTip"
           >
-            <img
-              class="comment__icon"
-              src="../../assets/commentsIcon.svg"
-            >
+            <IconStar />
+          </ButtonPlain>
+          <ButtonPlain
+            class="actions"
+            :class="{ active: tip.commentCount }"
+            @click="goToTip"
+          >
+            <IconComments />
             <span>{{ tip.commentCount }}</span>
-          </div>
+          </ButtonPlain>
+          <ButtonPlain
+            class="actions"
+          >
+            <IconShare />
+          </ButtonPlain>
         </div>
       </div>
     </div>
@@ -58,8 +74,13 @@ import Backend from '../../utils/backend';
 import backendAuthMixin from '../../utils/backendAuthMixin';
 import TipTitle from './TipTitle.vue';
 import TipPreview from './TipPreview.vue';
+import TipInput from '../TipInput.vue';
 import ThreeDotsMenu from '../ThreeDotsMenu.vue';
 import AuthorAndDate from './AuthorAndDate.vue';
+import ButtonPlain from '../ButtonPlain.vue';
+import IconComments from '../../assets/iconComments.svg?icon-component';
+import IconStar from '../../assets/iconStar.svg?icon-component';
+import IconShare from '../../assets/iconShare.svg?icon-component';
 
 export default {
   components: {
@@ -67,6 +88,11 @@ export default {
     TipPreview,
     ThreeDotsMenu,
     AuthorAndDate,
+    ButtonPlain,
+    IconComments,
+    IconStar,
+    IconShare,
+    TipInput,
   },
   mixins: [backendAuthMixin(true)],
   props: {
@@ -187,27 +213,51 @@ export default {
 .comment__icon {
   margin-right: 0.2rem;
   vertical-align: top;
+  height: 1rem;
 }
 
-.tip__footer {
+.tip-footer {
   border-bottom-left-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
   color: $light_font_color;
-  font-size: 0.8rem;
-  padding: 1.4rem 1rem 0.75rem;
-}
-
-.tip__footer_wrapper {
+  font-size: 1rem;
+  padding: 0.75rem 1rem 0.75rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  cursor: default;
+
+  ::v-deep .tip-input .button img {
+    height: 0.9rem;
+  }
+
+  .actions-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    padding: 0 2.3rem;
+
+    .actions {
+      svg {
+        margin-bottom: 0.3rem;
+        height: 0.9rem;
+      }
+
+      span {
+        margin-left: 0.5rem;
+      }
+
+      &.active {
+        color: #fff;
+      }
+    }
+  }
 }
 
 .tip__comments {
+  height: 1rem;
   align-items: center;
   display: flex;
   flex: 0 0 auto;
-  height: 1rem;
   cursor: pointer;
   position: relative;
   width: max-content;
@@ -230,10 +280,6 @@ export default {
 @media only screen and (max-width: 600px) {
   .tip__note {
     font-size: 0.75rem;
-  }
-
-  .tip__footer .tip__amount img {
-    width: 0.7rem;
   }
 }
 
@@ -267,13 +313,9 @@ export default {
     padding: 0;
   }
 
-  .tip__footer {
+  .tip-footer {
     font-size: 0.65rem;
     padding: 0.85rem 0 0 0;
-
-    .tip__amount img {
-      width: 1rem;
-    }
   }
 }
 </style>

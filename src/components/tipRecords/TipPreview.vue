@@ -23,7 +23,7 @@
             class="tip__amount"
             @click.stop
           >
-            <TipInput :tip="tip" />
+            <slot />
           </div>
           <div
             class="site__url"
@@ -80,7 +80,7 @@
             class="tip__amount"
             @click.stop
           >
-            <TipInput :tip="tip" />
+            <slot />
           </div>
           <div
             class="site__url"
@@ -113,7 +113,7 @@
           :title="tip.receiver"
           @click.stop
         >
-          <TipInput :tip="tip" />
+          <slot />
           <RouterLink :to="{ name: 'user-profile', params: { address: tip.receiver } }">
             <Avatar :address="tip.receiver" />
             <div class="tip__author_name">
@@ -134,7 +134,7 @@
           class="tip__amount"
           @click.stop
         >
-          <TipInput :tip="tip" />
+          <slot />
         </div>
         <div
           class="site__url"
@@ -159,7 +159,6 @@
 
 <script>
 import Backend from '../../utils/backend';
-import TipInput from '../TipInput.vue';
 import YouTubeEmbed from './YouTubeEmbed.vue';
 import TwitterEmbed from './TwitterEmbed.vue';
 import SoundCloudEmbed from './SoundCloudEmbed.vue';
@@ -167,7 +166,6 @@ import ExternalLink from '../../assets/externalLink.svg?icon-component';
 
 export default {
   components: {
-    TipInput,
     ExternalLink,
     YouTubeEmbed,
     TwitterEmbed,
@@ -187,10 +185,10 @@ export default {
       }
     },
     tipPreviewDescription() {
-      return this.tip?.preview.description || '';
+      return this.tip?.preview?.description || '';
     },
     tipPreviewTitle() {
-      return this.tip?.preview.title || '';
+      return this.tip?.preview?.title || '';
     },
     tipPreviewImage() {
       return this.isPreviewToBeVisualized && this.tip.preview.image !== null ? Backend.getTipPreviewUrl(this.tip.preview.image) : '';
