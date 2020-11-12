@@ -10,7 +10,7 @@ import TIPPING_V2_INTERFACE from 'tipping-contract/Tipping_v2_Interface.aes';
 import FUNGIBLE_TOKEN_CONTRACT from 'aeternity-fungible-token/FungibleTokenFullInterface.aes';
 import { BigNumber } from 'bignumber.js';
 import store from '../store';
-import { IS_MOBILE_DEVICE } from './index';
+// import { IS_MOBILE_DEVICE } from './index';
 
 let sdk;
 let contractV1;
@@ -76,12 +76,13 @@ export const scanForWallets = async () => {
     connectionInfo: { id: 'spy' },
   });
   const detector = await Detector({ connection: scannerConnection });
-  const webWalletTimeout = setTimeout(() => !IS_MOBILE_DEVICE && store.commit('enableIframeWallet'), 10000);
+  // const webWalletTimeout = setTimeout(() =>
+  // !IS_MOBILE_DEVICE && store.commit('enableIframeWallet'), 10000);
 
   return new Promise((resolve) => {
     detector.scan(async ({ newWallet }) => {
       if (!newWallet) return;
-      clearInterval(webWalletTimeout);
+      //    clearInterval(webWalletTimeout);
       await sdk.connectToWallet(await newWallet.getConnection());
       await sdk.subscribeAddress('subscribe', 'current');
       const address = sdk.rpcClient.getCurrentAccount();
