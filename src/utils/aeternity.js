@@ -6,6 +6,7 @@ import Detector from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/wal
 import BrowserWindowMessageConnection from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/connection/browser-window-message';
 import TIPPING_V1_INTERFACE from 'tipping-contract/Tipping_v1_Interface.aes';
 import TIPPING_V2_INTERFACE from 'tipping-contract/Tipping_v2_Interface.aes';
+import TIPPING_V3_INTERFACE from 'tipping-contract/Tipping_v3_Interface.aes';
 import FUNGIBLE_TOKEN_CONTRACT from 'aeternity-fungible-token/FungibleTokenFullInterface.aes';
 import { BigNumber } from 'bignumber.js';
 import store from '../store';
@@ -14,6 +15,7 @@ import { IS_MOBILE_DEVICE } from './index';
 let sdk;
 let contractV1;
 let contractV2;
+let contractV3;
 
 const initTippingContractIfNeeded = async () => {
   if (!sdk) throw new Error('Init sdk first');
@@ -25,6 +27,11 @@ const initTippingContractIfNeeded = async () => {
   if (!contractV2 && process.env.VUE_APP_CONTRACT_V2_ADDRESS) {
     contractV2 = await sdk.getContractInstance(TIPPING_V2_INTERFACE, {
       contractAddress: process.env.VUE_APP_CONTRACT_V2_ADDRESS,
+    });
+  }
+  if (!contractV3 && process.env.VUE_APP_CONTRACT_V3_ADDRESS) {
+    contractV3 = await client.getContractInstance(TIPPING_V3_INTERFACE, {
+      contractAddress: process.env.VUE_APP_CONTRACT_V3_ADDRESS,
     });
   }
 };
