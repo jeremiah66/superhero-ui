@@ -30,7 +30,7 @@ const initTippingContractIfNeeded = async () => {
     });
   }
   if (!contractV3 && process.env.VUE_APP_CONTRACT_V3_ADDRESS) {
-    contractV3 = await client.getContractInstance(TIPPING_V3_INTERFACE, {
+    contractV3 = await sdk.getContractInstance(TIPPING_V3_INTERFACE, {
       contractAddress: process.env.VUE_APP_CONTRACT_V3_ADDRESS,
     });
   }
@@ -157,4 +157,12 @@ export const retip = async (contractAddress, id, amount, tokenAddress = null) =>
   }
 
   return null;
+};
+
+export const postWithoutTip = async (title) => {
+  await initTippingContractIfNeeded();
+  return contractV3.methods.post_without_tip(title, [' ']);
+  // console.log(contractV1);
+  // console.log(contractV2);
+  // console.log(contractV3);
 };

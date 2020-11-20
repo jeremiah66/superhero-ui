@@ -46,7 +46,11 @@ export default {
   },
   computed: {
     args() {
-      return [this.tipSortBy, this.address, this.search, this.blacklist, this.feedTips, this.feedPosts];
+      return [this.tipSortBy,
+        this.address, this.search,
+        this.blacklist,
+        this.feedTips,
+        this.feedPosts];
     },
     ...mapState(
       'backend',

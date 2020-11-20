@@ -45,8 +45,8 @@
         <FeedPagination
           tip-sort-by="latest"
           :address="address"
-          feed-tips="true"
-          feed-posts="true"
+          :feed-tips="true"
+          :feed-posts="true"
         />
       </div>
       <div
