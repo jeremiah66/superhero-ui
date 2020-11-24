@@ -12,8 +12,9 @@
     </RouterLink>
 
     <RouterLink :to="{ name: 'feed' }">
+      <!-- eslint-disable-next-line vue-i18n/no-raw-text -->
       <IconTips />
-      {{ $t('Feed') }}
+      Feed
     </RouterLink>
     <RouterLink :to="{ name: 'voting' }">
       <IconGovernance />

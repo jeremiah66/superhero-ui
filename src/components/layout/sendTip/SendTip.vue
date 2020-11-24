@@ -20,19 +20,19 @@
         />
         <div class="mt-2 d-flex flex-row">
           <div class="post-actions">
-            <ButtonPlain :disabled="true">
+            <ButtonPlain disabled>
               <IconPictures />
             </ButtonPlain>
-            <ButtonPlain :disabled="true">
+            <ButtonPlain disabled>
               <IconGif />
             </ButtonPlain>
-            <ButtonPlain :disabled="true">
+            <ButtonPlain disabled>
               <IconEmoji />
             </ButtonPlain>
-            <ButtonPlain :disabled="true">
+            <ButtonPlain disabled>
               <IconPoll />
             </ButtonPlain>
-            <ButtonPlain :disabled="true">
+            <ButtonPlain disabled>
               <IconThreeDots />
             </ButtonPlain>
           </div>
@@ -41,7 +41,7 @@
             <ButtonPlain
               class="btn btn-primary post-submit"
               type="submit"
-              :disabled="!sendPostForm.title.length"
+              :disabled="!sendPostForm.title.length || sendingPost"
               @click="sendPost"
             >
               <span class="text-nowrap">
@@ -95,7 +95,9 @@
     <MessageInput
       v-else
       class="closed-view"
-      :placeholder="$t('components.layout.SendTip.SendNewTip')"
+      :placeholder="feed === 'posts' ?
+        'Create New Post' :
+        $t('components.layout.SendTip.SendNewTip')"
       @focus="useSdkWallet ? toggleForm() : openTipDeeplink()"
     />
   </div>
@@ -148,13 +150,14 @@ export default {
         title: '',
       },
       sendingTip: false,
+      sendingPost: false,
       isBlacklistedUrl: false,
       showForm: false,
     };
   },
   computed: {
     ...mapGetters('backend', ['minTipAmount']),
-    ...mapState(['useSdkWallet', 'tokenInfo']),
+    ...mapState(['useSdkWallet', 'tokenInfo', 'profile', 'balance', 'address']),
     isSendTipDataValid() {
       const urlRegex = /(https?:\/\/)?([\w-])+\.{1}([a-zA-Z]{2,63})([/\w-]*)*\/?\??([^#\n\r]*)?#?([^\n\r]*)/g;
       // TODO: better validation
@@ -207,13 +210,33 @@ export default {
       window.location = createDeepLinkUrl({ type: 'tip' });
     },
     async sendPost() {
+      this.sendingPost = true;
+
       postWithoutTip(this.sendPostForm.title)
-        .then((a) => console.log(a))
-        .catch((e) => console.log(e));
-      this.clearPostForm();
+        .then(async () => {
+          this.clearPostForm();
+          this.$store.dispatch('modals/open', {
+            name: 'success',
+            title: this.$t('components.layout.SendTip.SuccessHeader'),
+            body: 'Post sent!',
+          });
+          setTimeout(() => EventBus.$emit('reloadData'), 5000);
+        }).catch((e) => {
+          this.sendingPost = false;
+          if (e.code && e.code === 4) {
+            return;
+          }
+          console.error(e);
+          this.$store.dispatch('modals/open', {
+            name: 'failure',
+            title: this.$t('components.layout.SendTip.ErrorHeader'),
+            body: 'Post not sent, please try again',
+          });
+        });
     },
     clearPostForm() {
       this.sendPostForm = { title: '' };
+      this.sendingPost = false;
     },
   },
 };

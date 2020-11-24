@@ -86,6 +86,7 @@ export default {
     tip: { type: Object, default: null },
     userAddress: { type: String, default: '' },
     comment: { type: Object, default: null },
+    post: { type: Object, default: null },
   },
   data: () => ({
     inputValue: 0,
@@ -112,6 +113,9 @@ export default {
       return this.tip.id.split('_')[1] === 'v2';
     },
     tipUrl() {
+      if (this.post) {
+        return `https://superhero.com/tip/${this.post.id}`;
+      }
       if (this.comment) {
         return `https://superhero.com/tip/${this.comment.tipId}/comment/${this.comment.id}`;
       }

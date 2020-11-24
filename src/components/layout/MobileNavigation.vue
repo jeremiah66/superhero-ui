@@ -79,7 +79,7 @@ export default {
   computed: {
     ...mapState(['useSdkWallet']),
     isTipsRoute() {
-      return ['tips', 'feed-search'].includes(this.$route.name);
+      return ['feed', 'feed-search'].includes(this.$route.name);
     },
   },
   watch: {

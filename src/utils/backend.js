@@ -127,7 +127,7 @@ export default class Backend {
 
   static getCommentCountForAddress = async (address) => backendFetch(`comment/count/author/${address}`);
 
-  static getTipPreviewUrl = (previewLink) => `${process.env.VUE_APP_BACKEND_URL}/${previewLink}`;
+  static getTipPreviewUrl = (previewLink) => `${process.env.VUE_APP_BACKEND_URL}${previewLink}`;
 
   static getCommentById = async (id) => backendFetch(`comment/api/${id}`);
 

@@ -30,17 +30,24 @@
         <TipTitle :tip-title="tip.title" />
       </div>
       <TipPreview
+        v-if="tipUrl"
         :tip="tip"
         :go-to-tip="goToTip"
         :tip-url="tipUrl"
       >
-        <TipInput :tip="tip" />
+        <TipInput
+          v-if="tip.type !== 'PostWithoutTip'"
+          :tip="tip"
+        />
       </TipPreview>
       <div
         class="tip-footer"
         @click.stop
       >
-        <!-- <TipInput :tip="tip" /> -->
+        <TipInput
+          v-if="tip.type === 'PostWithoutTip'"
+          :post="tip"
+        />
         <div class="actions-wrapper">
           <ButtonPlain
             class="actions"
@@ -109,6 +116,7 @@ export default {
       return { name: 'tip', params: { tipId: this.tip.id } };
     },
     tipUrl() {
+      if (!this.tip.url) { return ''; }
       return this.tip.url.startsWith('http://') || this.tip.url.startsWith('https://') ? this.tip.url : `http://${this.tip.url}`;
     },
   },

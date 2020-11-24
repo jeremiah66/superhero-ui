@@ -162,7 +162,4 @@ export const retip = async (contractAddress, id, amount, tokenAddress = null) =>
 export const postWithoutTip = async (title) => {
   await initTippingContractIfNeeded();
   return contractV3.methods.post_without_tip(title, [' ']);
-  // console.log(contractV1);
-  // console.log(contractV2);
-  // console.log(contractV3);
 };
