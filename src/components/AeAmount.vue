@@ -1,7 +1,6 @@
 <template>
   <span
     class="ae-amount"
-    :class="{ 'without-symbol': withoutSymbol }"
   >
     <template>{{ roundedAmount }}</template>
     <!--eslint-disable-next-line vue-i18n/no-raw-text-->
@@ -53,10 +52,6 @@ export default {
   .ae {
     color: $secondary_color;
     padding-left: 2px;
-  }
-
-  &.without-symbol {
-    color: $tip_note_color;
   }
 }
 </style>

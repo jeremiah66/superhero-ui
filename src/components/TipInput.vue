@@ -15,21 +15,20 @@
         />
       </template>
     </Component>
-    <CustomDropdown
-      v-if="tipUrlStats && tipUrlStats.tokenTotalAmount.length"
+    <Dropdown
+      v-if="!userAddress && tipUrlStats && tipUrlStats.tokenTotalAmount.length"
       :options="tipUrlStats.tokenTotalAmount"
       show-right
       class="token-tips"
-      @click.stop
     >
-      <template slot-scope="{ option }">
+      <template v-slot="{ option }">
         <AeAmountFiat
           :key="option.token"
           :amount="option.amount"
           :token="option.token"
         />
       </template>
-    </CustomDropdown>
+    </Dropdown>
     <Modal
       v-if="showModal"
       @close="hideModal"
@@ -81,7 +80,7 @@ import AeInputAmount from './AeInputAmount.vue';
 import Loading from './Loading.vue';
 import AeButton from './AeButton.vue';
 import AeAmountFiat from './AeAmountFiat.vue';
-import CustomDropdown from './CustomDropdown.vue';
+import Dropdown from './Dropdown.vue';
 import Modal from './Modal.vue';
 
 export default {
@@ -91,7 +90,7 @@ export default {
     AeButton,
     AeAmountFiat,
     Modal,
-    CustomDropdown,
+    Dropdown,
   },
   props: {
     tip: { type: Object, default: null },
@@ -136,7 +135,8 @@ export default {
         ? { type: 'retip', id: this.tip.id } : { type: 'tip', url: this.tipUrl });
     },
     isValid() {
-      return (this.tip || this.message.trim().length > 0) && this.inputValue > this.minTipAmount;
+      return (this.tip || this.message.trim().length > 0)
+        && (this.inputToken !== 'native' || this.inputValue > this.minTipAmount);
     },
     iconTip() {
       if (this.userAddress) return iconTipUser;
