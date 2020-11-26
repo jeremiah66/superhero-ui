@@ -19,7 +19,7 @@ export default {
 
 <style lang="scss" scoped>
 .maintenance {
-  background-color: #14151f;
+  background-color: #000;
 
   @media (min-width: 400px) {
     position: fixed;
@@ -41,6 +41,7 @@ export default {
   img {
     display: block;
     margin: 0 auto;
+    max-width: 250px;
   }
 
   h2 {
@@ -48,7 +49,7 @@ export default {
     line-height: 55px;
     text-align: center;
     margin: 50px 1rem;
-    color: #3290e2;
+    color: $secondary_color;
   }
 }
 </style>
